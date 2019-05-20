@@ -23,9 +23,8 @@ Mapper<Object, Text, Text, IntWritable> {
             	//bring next word from iterator
                 word.set(itr.nextToken());
                 //emit (Key, Value) pair 
-                //Key is a word and Value is 1(IntWritable
+                //Key is a word and Value is 1(IntWritable)
                 context.write(word, one);
-                
             }
         }
 }

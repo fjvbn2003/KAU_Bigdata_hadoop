@@ -1,4 +1,3 @@
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -19,11 +18,11 @@ public class myWordcount {
         // setting .jar class that has main function
         job.setJarByClass(myWordcount.class);
         
-        // setting combiner class
 
        
         // setting mapper, reduceer class
         job.setMapperClass(myWordcountMapper.class);
+        // setting combiner class
         job.setCombinerClass(myWordcountReducer.class);
         job.setReducerClass(myWordcountReducer.class);
         
@@ -45,3 +44,4 @@ public class myWordcount {
     }
  
 }
+

@@ -8,7 +8,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Reducer;
 import java.util.Set;
-
+//
 class MyMapWritable extends MapWritable {
     @Override
     public String toString() {
@@ -25,43 +25,38 @@ class MyMapWritable extends MapWritable {
 public class frequencyReducer extends 
 Reducer<Text, MapWritable, Text, MapWritable> {
  
-	 private MyMapWritable incrementingMap = new MyMapWritable();
+	 private MyMapWritable map = new MyMapWritable();
 
 	    @Override
 	    protected void reduce(Text key, Iterable<MapWritable> values, Context context) throws IOException, InterruptedException {
-	        incrementingMap.clear();
-	        for (MapWritable value : values) {
-	            addAll(value);
-	        }
-	       ///////////////// This is for frequency of word f(B|A)/////////////////////////
-	        int sum =0;
-	        //summation of values
-	        for (Object k: incrementingMap.keySet()) {
-	        	DoubleWritable i = (DoubleWritable)incrementingMap.get(k);
-	        	sum+= i.get();
-	        }
-	        //update
-	        for (Object k: incrementingMap.keySet()) {
-	        	DoubleWritable i = (DoubleWritable)incrementingMap.get(k);
-	        	i.set(i.get()/sum);
-	        	incrementingMap.put((Writable) k, i);
-	        }
-		    ///////////////// End ///////////////
-
-	        
-	       context.write(key,incrementingMap);
+	       map.clear();
+	       for (MapWritable value : values) {
+	           addAll(value);
+	       }
+	       //f(B|A)를 구하는 과정
+	       int sum =0;
+	       //map에 있는 모든 value들를 더하여 sum에 저장한다.
+	       for (Object k: map.keySet()) {
+	    	   DoubleWritable i = (DoubleWritable)map.get(k);
+	    	   sum+= i.get();
+	       }
+	       //모든 value들을 sum으로 나누어 준다.
+	       for (Object k: map.keySet()) {
+	    	   DoubleWritable i = (DoubleWritable)map.get(k);
+	    	   i.set(i.get()/sum);
+	    	   map.put((Writable) k, i);
+	       	}
+	       context.write(key,map);
 	    }
-
-
 	    private void addAll(MapWritable mapWritable) {
 	        Set<Writable> keys = mapWritable.keySet();
 	        for (Writable key : keys) {
 	            DoubleWritable fromCount = (DoubleWritable) mapWritable.get(key);
-	            if (incrementingMap.containsKey(key)) {
-	                DoubleWritable count = (DoubleWritable) incrementingMap.get(key);
+	            if (map.containsKey(key)) {
+	                DoubleWritable count = (DoubleWritable) map.get(key);
 	                count.set(count.get() + fromCount.get());
 	            } else {
-	                incrementingMap.put(key, fromCount);
+	                map.put(key, fromCount);
 	            }
 	        }
 	    }

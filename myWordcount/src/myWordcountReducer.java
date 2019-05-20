@@ -25,3 +25,4 @@ Reducer<Text, IntWritable, Text, IntWritable> {
         context.write(key, res);
 	}
 }
+
