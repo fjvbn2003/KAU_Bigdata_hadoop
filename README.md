@@ -3,7 +3,7 @@ KAU Hadoop term-project.
 
 하둡에서 동작하는 string 처리 MapReduce 프로그램입니다.
 
-### 실행방법 예시
+### test
 ```
   hadoop jar ./myWordcount.jar myWordcount /test/input.txt /test/output
 ```
